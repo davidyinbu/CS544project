@@ -17,15 +17,13 @@ data set : https://www.kaggle.com/lepchenkov/usedcarscatalog
 
 ```{r cars}
 #load data
-
+car_data <- read.csv("cars.csv", encoding = "UTF-8", stringsAsFactors = T)
+attach(car_data)
 ```
 
 ## Including Plots
+```{r  , echo=FALSE}
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

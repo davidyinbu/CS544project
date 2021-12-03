@@ -18,12 +18,20 @@ data set : https://www.kaggle.com/lepchenkov/usedcarscatalog
 ```{r cars}
 #load data
 car_data <- read.csv("cars.csv", encoding = "UTF-8", stringsAsFactors = T)
-attach(car_data)
+#attach(car_data)
 ```
 
 ## Including Plots
-```{r  , echo=FALSE}
+```{r dis, echo=FALSE}
 
+p1 <- ggplot(car_data, aes(x = year_produced)) + geom_bar() + stat_density()
+ggplotly(p1)
+
+p2 <- ggplot(car_data, aes(x = price_usd)) + geom_histogram()
+ggplotly(p2)
+
+p3 <- ggplot(car_data, aes(x = odometer_value)) + geom_histogram()
+ggplotly(p3)
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

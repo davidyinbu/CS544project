@@ -24,14 +24,23 @@ car_data <- read.csv("cars.csv", encoding = "UTF-8", stringsAsFactors = T)
 ## Including Plots
 ```{r dis, echo=FALSE}
 
-p1 <- ggplot(car_data, aes(x = year_produced)) + geom_bar() + stat_density()
+p1 <- ggplot(car_data, aes(x = year_produced))+  geom_bar(aes(y = ..prop.., group = 1), fill = "grey") + geom_density(alpha=0.25, fill = "red", size = 1)
 ggplotly(p1)
 
-p2 <- ggplot(car_data, aes(x = price_usd)) + geom_histogram()
+p2 <- ggplot(car_data, aes(x = price_usd)) + geom_histogram(aes(y=..density..), fill = "grey")+ geom_density(alpha=0.25, fill = "red", size = 1)
 ggplotly(p2)
 
-p3 <- ggplot(car_data, aes(x = odometer_value)) + geom_histogram()
+p3 <- ggplot(car_data, aes(x = odometer_value)) +  geom_histogram(aes(y=..density..), fill = "grey")+ geom_density(alpha=0.25, fill = "red", size = 1)
 ggplotly(p3)
+
+
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+
+```{r CLT}
+
+
+```

@@ -236,23 +236,24 @@ plot_ly(data = pie_data_type, labels = ~Type, values=~Freq,type="pie")%>%
 ```{r year_trends}
 
 
-#
+#year trend from 1980
+
 #vis transimission
-p_t_1 <- ggplot(data = car_data, aes(x = year_produced, fill = transmission)) + geom_histogram(color = "grey")+
-coord_flip()
+p_t_1 <- ggplot(data = car_data%>%filter(year_produced >=1980), aes(x = year_produced, fill = transmission)) + geom_histogram(color = "grey")
+#+coord_flip()
 ggplotly(p_t_1)
 
 
 
 #vis Engine_fuel 
-p_t_2 <- ggplot(data = car_data, aes(x = year_produced, fill = engine_fuel)) + geom_histogram(color = "grey")+
-coord_flip()
+p_t_2 <- ggplot(data = car_data%>%filter(year_produced >=1980), aes(x = year_produced, fill = engine_fuel)) + geom_histogram(color = "grey")
+#+coord_flip()
 ggplotly(p_t_2)
 
 
 #Warranty 
-p_t_3 <- ggplot(data = car_data, aes(x = year_produced, fill = has_warranty)) + geom_histogram(color = "grey")+
-coord_flip()
+p_t_3 <- ggplot(data = car_data%>%filter(year_produced >=1980), aes(x = year_produced, fill = has_warranty)) + geom_histogram(color = "grey")
+#+coord_flip()
 ggplotly(p_t_3)
 
 
@@ -282,7 +283,7 @@ plot_ly(data = V_car_top5, labels = ~Model, values=~Freq,type="pie")%>%
 
 
 
-```{r p2cont}
+```{r top5Vcar_model}
 
 Top_5_v_dataset <- V_car%>%filter(model_name %in% V_car_top5_names )
 Top_5_v_dataset$model_name <- as.character(Top_5_v_dataset$model_name)
@@ -303,8 +304,9 @@ ggplotly(plot_22)
 
 
 
-#
-Top_5_by_year <- Top_5_v_dataset%>%group_by(model_name,year_produced)%>%count()
+#top 5 car trend over time
+#year trend from 1980
+Top_5_by_year <- Top_5_v_dataset%>%filter(year_produced >=1980)%>%group_by(model_name,year_produced)%>%count()
 Top_5_by_year <-  pivot_wider(Top_5_by_year, names_from = model_name,values_from = n)
 
 Top_5_by_year[is.na(Top_5_by_year)] <- 0
@@ -318,11 +320,19 @@ ggplotly(plot_23)
 
 
 ```{r bubble}
+
 names(V_car_top5) <- c("model_name", "Freq")
 Top_5_v_dataset <- merge(Top_5_v_dataset,V_car_top5, by  = "model_name")
-
 bubble_1 <- Top_5_v_dataset %>% arrange(desc(model_name)) %>% ggplot(aes(x=year_produced, y=odometer_value, size = price_usd, color = model_name)) + geom_point(alpha=0.25) 
-
 ggplotly(bubble_1)
+
+
+
+
+
+
+bubble_2 <- Top_5_v_dataset %>% arrange(desc(model_name)) %>% ggplot(aes(x=model_name, y=price_usd,  color = is_exchangeable, size = 0.5)) + geom_jitter(alpha=0.25)
+
+ggplotly(bubble_2)
 
 ```

@@ -1,7 +1,7 @@
 ---
-title: "Main"
-author: "Dawei Yin"
-date: "2021/12/2"
+title: "Analysis of Used Cars Catalog in Belarus"
+author: "Team 21 - Zhihe Tian / Dawei Yin / Sha Hu "
+date: "December 5th, 2021"
 output: html_document
 ---
 
@@ -24,7 +24,7 @@ car_data$model_name <- as.character(car_data$model_name)
 #attach(car_data)
 ```
 
-## Including Plots
+## Data Set Details
 ```{r dis, echo=FALSE}
 
 p1 <- ggplot(car_data, aes(x = year_produced))+  geom_bar(aes(y = ..prop.., group = 1), fill = "grey") + geom_density(alpha=0.25, fill = "red", size = 1)

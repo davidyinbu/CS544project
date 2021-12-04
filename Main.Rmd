@@ -1,5 +1,5 @@
 ---
-title: "Analysis of Used Cars Catalog in Belarus"
+title: " Analysis of Used Cars Catalog in Belarus"
 author: "Team 21 - Zhihe Tian / Dawei Yin / Sha Hu "
 date: "December 5th, 2021"
 output: html_document

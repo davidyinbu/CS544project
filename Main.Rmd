@@ -30,10 +30,10 @@ car_data$model_name <- as.character(car_data$model_name)
 p1 <- ggplot(car_data, aes(x = year_produced))+  geom_bar(aes(y = ..prop.., group = 1), fill = "grey") + geom_density(alpha=0.25, fill = "red", size = 1)
 ggplotly(p1)
 
-p2 <- ggplot(car_data, aes(x = price_usd)) + geom_histogram(aes(y=..density..), fill = "grey")+ geom_density(alpha=0.25, fill = "red", size = 1)
+p2 <- ggplot(car_data, aes(x = price_usd)) + geom_histogram(aes(y=..density..), fill = "grey")+ geom_density(alpha=0.25, fill = "blue", size = 1)
 ggplotly(p2)
 
-p3 <- ggplot(car_data, aes(x = odometer_value)) +  geom_histogram(aes(y=..density..), fill = "grey")+ geom_density(alpha=0.25, fill = "red", size = 1)
+p3 <- ggplot(car_data, aes(x = odometer_value)) +  geom_histogram(aes(y=..density..), fill = "grey")+ geom_density(alpha=0.25, fill = "green", size = 1)
 ggplotly(p3)
 
 

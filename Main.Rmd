@@ -35,7 +35,7 @@ We try to build a model that effectively predicts the price of the car based on 
 
 ```{r dis, echo=FALSE}
 
-- Year produced
+#- Year produced
 
 p1 <- ggplot(car_data, aes(x = year_produced))+  geom_bar(aes(y = ..prop.., group = 1), fill = "grey") + geom_density(alpha=0.25, fill = "red", size = 1)
 ggplotly(p1)

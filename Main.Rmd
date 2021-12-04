@@ -56,12 +56,13 @@ Note that the `echo = FALSE` parameter was added to the code chunk to prevent pr
 ```{r CLT}
 CLT_odo_data <- car_data$odometer_value
 outliers <- boxplot(CLT_odo_data, plot=FALSE)$out
-CLT_odo_data <- CLT_odo_data[!CLT_odo_data %in% outliers]
 
-modes <- function(d){
-    i <- which(diff(sign(diff(d$y))) < 0) + 1
-    data.frame(x = d$x[i], y = d$y[i])
-}
+#cleaned data
+CLT_odo_data <- CLT_odo_data[!CLT_odo_data %in% outliers]
+#cleaned dataset
+CLT_odo_dataset <- car_data%>%filter(odometer_value %in% CLT_odo_data)
+
+
 
 #poplution mean 
 mean(CLT_odo_data)
@@ -122,69 +123,77 @@ ggplotly(plot_densi)
 
 ```{r sampling}
 library(sampling)
-
-library(sampling)
-#srswr
+#srswor
 set.seed(544)
 
-s <- srswr(1000, length(CLT_odo_data))
-s[s != 0]
+samplesnum <- 1000
 
+s <- srswor(samplesnum, length(CLT_odo_data))
+#s[s != 0]
 rows <- (1:length(CLT_odo_data))[s!=0]
 rows <- rep(rows, s[s != 0])
-rows
-
+#rows
 sample.1 <- CLT_odo_data[rows]
-
-hist(sample.1)
+#hist(sample.1)
 
 
 #systematic
-
 N <- length(CLT_odo_data)
-n <- 1000
-
+n <- samplesnum
 k <- ceiling(N / n)
-k
-
+#k
 r <- sample(k, 1)
-r
-
-
+#r
 s <- seq(r, by = k, length = n)
-
 sample.2 <- CLT_odo_data[s]
+#hist(sample.2)
 
-hist(sample.2)
 
-#stratified
-len<-length(CLT_odo_data)
-section.ids <- rep(LETTERS[1:25], each = len/25)
 
-section.odo <- CLT_odo_data[1:length(section.ids)]
+#stratified odometer by proportion of engine fuel types
 
-data <- data.frame(
-  Section = section.ids, 
-  odo = section.odo)
+st.size <- table(CLT_odo_dataset$transmission)/sum(table(CLT_odo_dataset$transmission))*samplesnum
+#st.size <- ceiling(st.size)
 
-head(data)
 
-table(data$Section)
-
-st.1 <- sampling::strata(data, stratanames = c("Section"),
-                         size = rep(25,40), method = "srswor",
+st <- strata(CLT_odo_dataset, stratanames = c("transmission"),
+                         size = st.size, method = "srswor",
                          description = TRUE)
 
-st.1
+st.sample1 <- getdata(data, st)
+sample.3 <- st.sample1$odo
 
-st.sample1 <- getdata(data, st.1)
+sample_plot <- data.frame(srswor=sample.1, systematic = sample.2, stratified = c(sample.3, NA))
 
-par(mfrow = c(2,2))
-hist(CLT_odo_data)
-hist(sample.1)
-hist(sample.2)
-hist(st.sample1$odo)
-par(mfrow = c(1,1))
+
+
+
+
+
+
+#par(mfrow = c(2,2))
+#hist(CLT_odo_data)
+#hist(sample.1)
+#hist(sample.2)
+#hist(st.sample1$odo)
+#par(mfrow = c(1,1))
+
+pops_1 <- plot_ly(CLT_odo_dataset, x = ~odometer_value,  histnorm = "probability") %>%
+  add_histogram(name = "population")
+
+ps_1 <- plot_ly(sample_plot, x = ~srswor,  histnorm = "probability", nbinsx = 100) %>%
+  add_histogram(name = "srswor")
+
+ps_2 <- plot_ly(sample_plot, x = ~systematic,  histnorm = "probability", nbinsx = 100) %>%
+  add_histogram(name = "systematic")
+
+ps_3 <- plot_ly(sample_plot, x = ~stratified,  histnorm = "probability", nbinsx = 100) %>%
+  add_histogram(name = "stratified Sampling by transmission")
+
+subplot(
+  pops_1,ps_1, ps_2, ps_3,
+  nrows = 4, shareX = TRUE
+)
 
 ```
 
@@ -211,6 +220,9 @@ plot_ly(data = pie_data, labels = ~Brand, values=~Freq,type="pie")%>%
 #word cloud
 #word_data <- pie_data[1:2];colnames(word_data) <- c("word", "freq")
 #wordcloud2(data=pie_data, size=1.6)
+
+
+
 
 
 

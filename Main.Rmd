@@ -12,6 +12,7 @@ library(plotly)
 library(psych)
 library("reshape2")
 library(wordcloud2) 
+library(sampling)
 ```
 
 ## R Markdown
@@ -53,7 +54,7 @@ Note that the `echo = FALSE` parameter was added to the code chunk to prevent pr
 
 
 
-```{r CLT}
+```{r CLT, echo=FALSE}
 CLT_odo_data <- car_data$odometer_value
 outliers <- boxplot(CLT_odo_data, plot=FALSE)$out
 
@@ -121,8 +122,7 @@ ggplotly(plot_densi)
 
 
 
-```{r sampling}
-library(sampling)
+```{r sampling, echo=FALSE}
 #srswor
 set.seed(544)
 
@@ -160,7 +160,7 @@ st <- strata(CLT_odo_dataset, stratanames = c("transmission"),
                          size = st.size, method = "srswor",
                          description = TRUE)
 
-st.sample1 <- getdata(data, st)
+st.sample1 <- getdata(CLT_odo_dataset, st)
 sample.3 <- st.sample1$odo
 
 sample_plot <- data.frame(srswor=sample.1, systematic = sample.2, stratified = c(sample.3, NA))
@@ -201,7 +201,7 @@ subplot(
 
 
 
-```{r top10}
+```{r top10, echo=FALSE}
 
 top<-sort(table(car_data$manufacturer_name),decreasing = T)[1:10]
 top_names <- names(top)
@@ -229,7 +229,7 @@ plot_ly(data = pie_data, labels = ~Brand, values=~Freq,type="pie")%>%
 
 ```
 
-```{r bodycolor}
+```{r bodycolor, echo=FALSE}
 pie_data_color<- as.data.frame(table(car_data_other$color))
 colnames(pie_data_color)<-c("Color","Freq")
 
@@ -237,7 +237,7 @@ plot_ly(data = pie_data_color, labels = ~Color, values=~Freq,type="pie")%>%
   layout(title = "Body color")
 ```
 
-```{r bodytype}
+```{r bodytype, echo=FALSE}
 pie_data_type<- as.data.frame(table(car_data_other$body_type))
 colnames(pie_data_type)<-c("Type","Freq")
 
@@ -245,7 +245,7 @@ plot_ly(data = pie_data_type, labels = ~Type, values=~Freq,type="pie")%>%
   layout(title = "Body type")
 ```
 
-```{r year_trends}
+```{r year_trends, echo=FALSE}
 
 
 #year trend from 1980
@@ -272,7 +272,7 @@ ggplotly(p_t_3)
 ```
 
 
-```{r q2}
+```{r q2, echo=FALSE}
 
 #
 V_car <- car_data_other%>%filter(pie_ca == "Volkswagen")
@@ -295,7 +295,7 @@ plot_ly(data = V_car_top5, labels = ~Model, values=~Freq,type="pie")%>%
 
 
 
-```{r top5Vcar_model}
+```{r top5Vcar_model, echo=FALSE}
 
 Top_5_v_dataset <- V_car%>%filter(model_name %in% V_car_top5_names )
 Top_5_v_dataset$model_name <- as.character(Top_5_v_dataset$model_name)
@@ -331,7 +331,7 @@ ggplotly(plot_23)
 ```
 
 
-```{r bubble}
+```{r bubble, echo=FALSE}
 
 names(V_car_top5) <- c("model_name", "Freq")
 Top_5_v_dataset <- merge(Top_5_v_dataset,V_car_top5, by  = "model_name")

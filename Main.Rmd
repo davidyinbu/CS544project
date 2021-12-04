@@ -1,5 +1,5 @@
 ---
-title: " Analysis of Used Cars Catalog in Belarus "
+title: "Analysis of Used Cars Catalog in Belarus"
 author: "Team 21 - Zhihe Tian / Dawei Yin / Sha Hu "
 date: "December 5th, 2021"
 output: html_document
@@ -31,9 +31,11 @@ car_data$model_name <- as.character(car_data$model_name)
 We try to build a model that effectively predicts the price of the car based on its parameters (both numerical and categorical)
 
 
-
+## Distributions of Datas 
 
 ```{r dis, echo=FALSE}
+
+- Year produced
 
 p1 <- ggplot(car_data, aes(x = year_produced))+  geom_bar(aes(y = ..prop.., group = 1), fill = "grey") + geom_density(alpha=0.25, fill = "red", size = 1)
 ggplotly(p1)

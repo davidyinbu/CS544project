@@ -19,6 +19,7 @@ data set : https://www.kaggle.com/lepchenkov/usedcarscatalog
 ```{r cars}
 #load data
 car_data <- read.csv("cars.csv", encoding = "UTF-8", stringsAsFactors = T)
+car_data$model_name <- as.character(car_data$model_name)
 #attach(car_data)
 ```
 
@@ -121,7 +122,7 @@ library(sampling)
 
 ```{r top10}
 
-top<-sort(table(car_data$manufacturer_name),decreasing = T)[1:11]
+top<-sort(table(car_data$manufacturer_name),decreasing = T)[1:10]
 top_names <- names(top)
 car_data_other <- car_data%>%mutate(pie_ca = ifelse(manufacturer_name %in% top_names,
                                              yes = as.character(manufacturer_name), "other"))
@@ -153,4 +154,78 @@ plot_ly(data = pie_data_type, labels = ~Type, values=~Freq,type="pie")%>%
   layout(title = "Body type")
 ```
 
-```{r Transmissionvsyear}
+```{r year_trends}
+
+
+#
+#vis transimission
+p_t_1 <- ggplot(data = car_data, aes(x = year_produced, fill = transmission)) + geom_histogram(color = "grey")+
+coord_flip()
+ggplotly(p_t_1)
+
+
+
+#vis Engine_fuel 
+p_t_2 <- ggplot(data = car_data, aes(x = year_produced, fill = engine_fuel)) + geom_histogram(color = "grey")+
+coord_flip()
+ggplotly(p_t_2)
+
+
+#Warranty 
+p_t_3 <- ggplot(data = car_data, aes(x = year_produced, fill = has_warranty)) + geom_histogram(color = "grey")+
+coord_flip()
+ggplotly(p_t_3)
+
+
+```
+
+
+```{r q2}
+
+#
+V_car <- car_data_other%>%filter(pie_ca == "Volkswagen")
+V_car$model_name <- as.factor(V_car$model_name)
+
+V_car_top5 <- sort(table(V_car$model_name),decreasing = T)
+V_car_top5_names <- names(V_car_top5)[1:5]
+other <- data.frame(Model="other", Freq = sum(V_car_top5[6:length(V_car_top5)]))
+#V_car_top5%>%add_row(Model = "other", Freq = sum(V_car_top5[6:length(V_car_top5)]))
+V_car_top5 <- as.data.frame(V_car_top5); colnames(V_car_top5) <- c("Model", "Freq")
+V_car_top5<- V_car_top5[1:5,]
+V_car_top5 <- rbind(V_car_top5, other)
+
+plot_ly(data = V_car_top5, labels = ~Model, values=~Freq,type="pie")%>%
+  layout(title = "TOP5 most popular of Volkswagen")
+
+```
+
+
+
+
+```{r p2cont}
+
+Top_5_v_dataset <- V_car%>%filter(model_name %in% V_car_top5_names )
+Top_5_v_dataset$model_name <- as.factor(Top_5_v_dataset$model_name)
+Top_5_v_dataset <- as.data.frame(Top_5_v_dataset)
+
+
+plot_ly(Top_5_v_dataset, y = ~model_name, x = ~price_usd) %>%
+  add_boxplot(color = ~model_name)
+
+
+Top_5_v_dataset%>%group_by(model_name)%>%
+  do(plot_ly(., y = ~model_name, x = ~price_usd)) %>%
+  add_histogram(color = ~model_name)
+
+
+plot_22 <- ggplot(Top_5_v_dataset,aes( x= odometer_value)) + geom_histogram(aes(fill = model_name)) + facet_grid(model_name~.)
+ggplotly(plot_22)
+
+
+
+
+#
+Top_5_v_dataset%>%group_by(model_name,year_produced)
+
+
+```

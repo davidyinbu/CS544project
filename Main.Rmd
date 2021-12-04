@@ -1,5 +1,5 @@
 ---
-title: " Analysis of Used Cars Catalog in Belarus"
+title: " Analysis of Used Cars Catalog in Belarus "
 author: "Team 21 - Zhihe Tian / Dawei Yin / Sha Hu "
 date: "December 5th, 2021"
 output: html_document
@@ -25,6 +25,8 @@ car_data$model_name <- as.character(car_data$model_name)
 ```
 
 ## Data Set Details
+#The dataset is collected from various web resources in order to explore the used cars market, and the data is scraped in Belarus (western Europe) on the 2nd of December 2019.
+
 ```{r dis, echo=FALSE}
 
 p1 <- ggplot(car_data, aes(x = year_produced))+  geom_bar(aes(y = ..prop.., group = 1), fill = "grey") + geom_density(alpha=0.25, fill = "red", size = 1)

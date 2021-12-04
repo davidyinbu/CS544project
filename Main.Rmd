@@ -25,7 +25,7 @@ car_data$model_name <- as.character(car_data$model_name)
 ```
 
 ## Data Set Details
-#The dataset is collected from various web resources in order to explore the used cars market, and the data is scraped in Belarus (western Europe) on the 2nd of December 2019.
+The dataset is collected from various web resources in order to explore the used cars market, and the data is scraped in Belarus (western Europe) on the 2nd of December 2019.
 
 ## Goal of Analysis
 We try to build a model that effectively predicts the price of the car based on its parameters (both numerical and categorical)

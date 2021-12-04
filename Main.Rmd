@@ -109,12 +109,48 @@ ggplotly(plot_densi)
 
 
 ```{r sampling}
-
-
-
-
-
+library(sampling)
 
 
 
 ```
+
+
+
+
+
+```{r top10}
+
+top<-sort(table(car_data$manufacturer_name),decreasing = T)[1:11]
+top_names <- names(top)
+car_data_other <- car_data%>%mutate(pie_ca = ifelse(manufacturer_name %in% top_names,
+                                             yes = as.character(manufacturer_name), "other"))
+
+pie_data <- as.data.frame(table(car_data_other$pie_ca)); colnames(pie_data)<-c("Brand","Freq")
+
+pie_data <- pie_data%>%arrange(desc(Brand))%>%mutate(prop = Freq /sum(pie_data$Freq)*100)%>%mutate(ypos = cumsum(prop)- 0.5*prop )
+
+  
+
+plot_ly(data = pie_data, labels = ~Brand, values=~Freq,type="pie")%>%
+  layout(title = "TOP10 popular car")
+
+
+```
+```{r body}
+pie_data_color<- as.data.frame(table(car_data_other$color))
+colnames(pie_data_color)<-c("Color","Freq")
+
+plot_ly(data = pie_data_color, labels = ~Color, values=~Freq,type="pie")%>%
+  layout(title = "Body color")
+```
+
+```{r bodytype}
+pie_data_type<- as.data.frame(table(car_data_other$body_type))
+colnames(pie_data_type)<-c("Type","Freq")
+
+plot_ly(data = pie_data_type, labels = ~Type, values=~Freq,type="pie")%>%
+  layout(title = "Body type")
+```
+
+```{r Transmissionvsyear}

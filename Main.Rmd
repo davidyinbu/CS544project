@@ -237,3 +237,14 @@ plot_23 <- Top_5_by_year %>%
 ggplotly(plot_23)
 
 ```
+
+
+```{r bubble}
+names(V_car_top5) <- c("model_name", "Freq")
+Top_5_v_dataset <- merge(Top_5_v_dataset,V_car_top5, by  = "model_name")
+
+bubble_1 <- Top_5_v_dataset %>% arrange(desc(model_name)) %>% ggplot(aes(x=year_produced, y=price_usd, size = Freq, color = model_name)) + geom_point(alpha=0.25) 
+
+ggplotly(bubble_1)
+
+```

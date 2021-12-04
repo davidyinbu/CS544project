@@ -10,6 +10,7 @@ library(tidyverse)
 library(ggplot2)
 library(plotly)
 library(psych)
+library("reshape2")
 
 ```
 
@@ -184,7 +185,8 @@ ggplotly(p_t_3)
 
 #
 V_car <- car_data_other%>%filter(pie_ca == "Volkswagen")
-V_car$model_name <- as.factor(V_car$model_name)
+V_car$model_name <- as.character(V_car$model_name)
+
 
 V_car_top5 <- sort(table(V_car$model_name),decreasing = T)
 V_car_top5_names <- names(V_car_top5)[1:5]
@@ -205,19 +207,18 @@ plot_ly(data = V_car_top5, labels = ~Model, values=~Freq,type="pie")%>%
 ```{r p2cont}
 
 Top_5_v_dataset <- V_car%>%filter(model_name %in% V_car_top5_names )
+Top_5_v_dataset$model_name <- as.character(Top_5_v_dataset$model_name)
 Top_5_v_dataset$model_name <- as.factor(Top_5_v_dataset$model_name)
+
 Top_5_v_dataset <- as.data.frame(Top_5_v_dataset)
 
-
+#
 plot_ly(Top_5_v_dataset, y = ~model_name, x = ~price_usd) %>%
   add_boxplot(color = ~model_name)
 
 
-Top_5_v_dataset%>%group_by(model_name)%>%
-  do(plot_ly(., y = ~model_name, x = ~price_usd)) %>%
-  add_histogram(color = ~model_name)
 
-
+#
 plot_22 <- ggplot(Top_5_v_dataset,aes( x= odometer_value)) + geom_histogram(aes(fill = model_name)) + facet_grid(model_name~.)
 ggplotly(plot_22)
 
@@ -225,7 +226,14 @@ ggplotly(plot_22)
 
 
 #
-Top_5_v_dataset%>%group_by(model_name,year_produced)
+Top_5_by_year <- Top_5_v_dataset%>%group_by(model_name,year_produced)%>%count()
+Top_5_by_year <-  pivot_wider(Top_5_by_year, names_from = model_name,values_from = n)
 
+Top_5_by_year[is.na(Top_5_by_year)] <- 0
+plot_23 <- Top_5_by_year %>%
+    gather(key,number, Golf, Jetta,Passat,T4,Touran) %>%
+    ggplot(aes(x=year_produced, y=number, colour=key)) +
+    geom_point() + geom_line() 
+ggplotly(plot_23)
 
 ```

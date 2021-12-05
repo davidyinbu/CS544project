@@ -351,12 +351,13 @@ ggplotly(p_t_3)
 
 
 ```
-- Observations
-Since 1984, Automatic transmission vehicles have appeared in the used car market, and with the development of time,Automatic transmission vehicles have gradually overtaken Mechanical transmission vehicles. In 2006, the number of Automatic transmission vehicles surpassed that of Mechanical transmission vehicles for the first time in the used car market, and has been maintained since then.
+### Observations
 
-In the used car market, gasoline vehicles and diesel vehicles are the most, but not only these two models. Gas vehicles always had a certain market volume, and hybrid-petrol vehicles had joined in 2005.
+- Since 1984, Automatic transmission vehicles have appeared in the used car market, and with the development of time,Automatic transmission vehicles have gradually overtaken Mechanical transmission vehicles. In 2006, the number of Automatic transmission vehicles surpassed that of Mechanical transmission vehicles for the first time in the used car market, and has been maintained since then.
 
-Warranty won’t be an important factor for car buyers, because lots of used cars with higher production years and high mileage. Since it’s  too common in the used car market and almost most vehicles have no warranty. Thus, the Warranty becomes an negligible reference value.
+- In the used car market, gasoline vehicles and diesel vehicles are the most, but not only these two models. Gas vehicles always had a certain market volume, and hybrid-petrol vehicles had joined in 2005.
+
+- Warranty won’t be an important factor for car buyers, because lots of used cars with higher production years and high mileage. Since it’s  too common in the used car market and almost most vehicles have no warranty. Thus, the Warranty becomes an negligible reference value.
 
 
 
@@ -383,7 +384,12 @@ V_car_top5 <- as.data.frame(V_car_top5); colnames(V_car_top5) <- c("Model", "Fre
 V_car_top5<- V_car_top5[1:5,]
 V_car_top5 <- rbind(V_car_top5, other)
 
-plot_ly(data = V_car_top5, labels = ~Model, values=~Freq,type="pie")%>%
+
+colors_1 <- c('red', 'orange', 'yellow', 'green', 'blue', 'black')
+
+plot_ly(data = V_car_top5, labels = ~Model, values=~Freq,type="pie",
+         marker = list(colors = colors_1,
+                      line = list(color = '#FFFFFF', width = 1)),showlegend = T)%>%
   layout(title = "TOP5 most popular model of Volkswagen")
 
 ```
@@ -401,17 +407,23 @@ Top_5_v_dataset$model_name <- as.factor(Top_5_v_dataset$model_name)
 Top_5_v_dataset <- as.data.frame(Top_5_v_dataset)
 
 #
-plot_ly(Top_5_v_dataset, y = ~model_name, x = ~price_usd) %>%
-  add_boxplot(color = ~model_name)
+colors_2 <- c("orange", "yellow", "red", "green", "blue")
+plot_ly(Top_5_v_dataset, y = ~model_name, x = ~price_usd, type = "box", color = ~model_name, colors = colors_2) %>%layout(boxmode = "group")
 ```
-Considering that the price of the vehicle cannot be fixed at one numerical value,therefore we use boxplots to visualize the price distributions. Surprisingly, the most selling used car model of "Volkswagen" in the catalog is not the cheapest; its price is in the middle of the other top 5 car models.
+Considering that the price of the vehicle cannot be fixed at one numerical value,therefore we use boxplots to visualize the price distributions. Surprisingly, the most selling used car model of "Volkswagen" in the catalog is not the cheapest; its price is in the middle of the other top 5 car models. However, the Touran has the highest median price, and the Golf has the lowest.
 
+
+- The Odometer of most popular 5 vehicles in Volkswagen
 ```{r top5Vcar_model_plot2, echo=FALSE}
-plot_22 <- ggplot(Top_5_v_dataset,aes( x= odometer_value)) + geom_histogram(aes(fill = model_name)) + facet_grid(model_name~.)
+
+
+
+plot_22 <- ggplot(Top_5_v_dataset,aes( x= odometer_value)) + geom_histogram(aes(fill = model_name))  + facet_grid(model_name~.) + scale_fill_manual(values= colors_2)+ geom_vline(data = Top_5_v_dataset%>%filter(model_name == "Golf"), aes(xintercept = mean(odometer_value)))+
+  geom_vline(data = Top_5_v_dataset%>%filter(model_name == "Jetta"), aes(xintercept = mean(odometer_value)))+
+  geom_vline(data = Top_5_v_dataset%>%filter(model_name == "Passat"), aes(xintercept = mean(odometer_value)))+
+  geom_vline(data = Top_5_v_dataset%>%filter(model_name == "T4"), aes(xintercept = mean(odometer_value)))+
+  geom_vline(data = Top_5_v_dataset%>%filter(model_name == "Touran"), aes(xintercept = mean(odometer_value)))
 ggplotly(plot_22)
-
-
-
 ```
 
 

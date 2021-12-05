@@ -2,10 +2,19 @@
 title: "Analysis of Used Cars Catalog in Belarus"
 author: "Team 21 - Zhihe Tian / Dawei Yin / Sha Hu "
 date: "December 5th, 2021"
-output: html_document
+output: 
+  html_document:
+    fig_width: 8
+    code_folding: hide
+    highlight: tango
+    toc: true
+    toc_float:
+      collapsed: true
 ---
 
 ```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.width=8, fig.height=4,
+                      echo=FALSE, warning=FALSE, message=FALSE)
 library(tidyverse)
 library(ggplot2)
 library(plotly)
@@ -15,8 +24,6 @@ library(wordcloud2)
 library(sampling)
 ```
 
-## R Markdown
-data set : https://www.kaggle.com/lepchenkov/usedcarscatalog
 
 ```{r cars}
 #load data
@@ -25,34 +32,87 @@ car_data$model_name <- as.character(car_data$model_name)
 #attach(car_data)
 ```
 
-## Data Set Details
-The dataset is collected from various web resources in order to explore the used cars market, and the data is scraped in Belarus (western Europe) on the 2nd of December 2019.
+# Data Set Details
 
-## Goal of Analysis
-We try to build a model that effectively predicts the price of the car based on its parameters (both numerical and categorical)
+This Dataset is retrieved from Kaggle, and the following data is collected from various web resources and worthy dealers in order to explore the Used Cars Market of Belarus (western Europe). The data set includes a lot of valuable Cars information like Manufacturer, Model, O Odometer, Produced year,Transmission etc. Until the 2nd of December 2019, The dataset contains 38,450 samples of the Used car market in Belarus.
+data set link: https://www.kaggle.com/lepchenkov/usedcarscatalog
 
 
-## Distributions of Datas 
+# Goal of Analysis
+
+Nowadays, the Used Car Market has been so well developed, and the highly cost-effective used car makes many people will put the used cars as the first choice when they are planning to have a car. As the obeservation we found that People would like to spend a lot of time for discussing prices of heavily used cars, how they age and hold or lose value. And if someone is planning to buy a used car, they have to spend some time finding similar cars in the catalog and trying to discover trends and figure out the fair price. More importantly, they have to withstand the stress of decision making regarding the price. Thus,  the concept of this research is to collect the data and try to build a model that effectively predicts the sales volume of the car based on its parameters (both numerical and categorical), while using the most effective tools available and exploring the decision making of the model thoroughly.
+
+
+
+# Distribution of Data 
 
 ```{r dis, echo=FALSE}
 
 #- Year produced
 
-p1 <- ggplot(car_data, aes(x = year_produced))+  geom_bar(aes(y = ..prop.., group = 1), fill = "grey") + geom_density(alpha=0.25, fill = "red", size = 1)
-ggplotly(p1)
 
+
+
+
+
+
+
+p1 <- ggplot(car_data, aes(x = year_produced))+  geom_bar(aes(y = ..prop.., group = 1), fill = "grey", show.legend = T) + geom_density(alpha=0.25, fill = "red", size = 1) + ggtitle("Distributions")
+p1 <- ggplotly(p1)
+
+
+#1
 p2 <- ggplot(car_data, aes(x = price_usd)) + geom_histogram(aes(y=..density..), fill = "grey")+ geom_density(alpha=0.25, fill = "blue", size = 1)
-ggplotly(p2)
+p2 <- ggplotly(p2)
 
 p3 <- ggplot(car_data, aes(x = odometer_value)) +  geom_histogram(aes(y=..density..), fill = "grey")+ geom_density(alpha=0.25, fill = "green", size = 1)
-ggplotly(p3)
+p3 <- ggplotly(p3)
 
+
+fig <- subplot(
+  p1,p2, p3,
+  nrows = 3, shareX = F, shareY = F
+)
+
+
+annotations = list( list( 
+    x = 0.4,  
+    y = 0.8,  
+    text = "Car year produced distribution",  
+    xref = "paper",  
+    yref = "paper",  
+    xanchor = "center",  
+    yanchor = "bottom",  
+    showarrow = FALSE 
+  ),  
+  list( 
+    x = 0.6,  
+    y = 0.5,  
+    text = "Car price in USD distribution",  
+    xref = "paper",  
+    yref = "paper",  
+    xanchor = "center",  
+    yanchor = "bottom",  
+    showarrow = FALSE 
+  ), 
+  list( 
+    x = 0.7,  
+    y = 0.1,  
+    text = "Car odometer value distribution",  
+    xref = "paper",  
+    yref = "paper",  
+    xanchor = "center",  
+    yanchor = "bottom",  
+    showarrow = FALSE 
+  ) )
+
+
+fig %>% layout( annotations = annotations)
 
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-
-
+#Central Limit Theorem 
+The central limit theorem states that the distribution of a sample variable approximates a normal distribution as the sample size becomes larger, assuming that all samples are identical in size, and regardless of the population's actual distribution shape.Since there are lots of statistical procedures that require normality in the data set, the central limit theorem becomes more important. Thus, we could use the samples attribute in this data set to prove the applicability of the central limit theorem by dropping the outliers, and it can be presented in four different forms stacked together. As displayed in the box plot and histogram below, the distribution of all groups have a positive skew. 
 
 ```{r CLT, echo=FALSE}
 CLT_odo_data <- car_data$odometer_value
@@ -101,7 +161,7 @@ mean(ss[,1])
 mean(ss[,2])
 mean(ss[,3])
 mean(ss[,4])
-describe(ss)
+
 
 sss <- gather(ss)
 
@@ -114,12 +174,16 @@ sss <- gather(ss)
   #theme(legend.position = c(0, 1),legend.justification = c(0, 1))
 
 plot_densi <- ggplot(sss, aes(x = value, fill = key)) +
-  geom_density(kernel = "gaussian", alpha = 0.1)
+  geom_density(kernel = "gaussian", alpha = 0.3) +
+  guides(fill=guide_legend(title="Sample size"))
 ggplotly(plot_densi)
 
+describe(ss)
+
 ```
+# Sampling
 
-
+Sampling is a way to examine the dataset by selecting a portion of it as representative. By performing sampling, processed data will be slicing into different chunks and then using different methods to select samples from the chunks. There are several ways to perform the slicing and the selecting. To start sampling, a population size is required, and in our project, a size of 1000 samples is set to be the population. We choose to use an odometer as our sample population and apply sampling on it. The first way we are using sampling is simple random sampling (SRS). It’s a way to perform sampling by selecting samples from a larger group, and each object in the frame will have the same chance to get picked as a sample. Systematic sampling is the second method we used on sampling. In systematic sampling, samples are selected in a set interval calculated by dividing the total population by the targeting sample size. In this method, samples will be selected constantly after each interval, except the first sample will be selected from the first set of numbers within the first interval. The last method of sampling we are using is stratified sampling. Stratified sampling is to select samples from different strata, which is created by subgrouping the groups with similar characteristics using SRS. In our project, we use the attribute transmission as the stratify indicator, and stratified odometer by proportion of engine fuel types.
 
 
 ```{r sampling, echo=FALSE}
@@ -198,9 +262,12 @@ subplot(
 ```
 
 
+# General Analysis of Used Cars
+Into the research topic,we will explore the attributes, and gain further insight of the most popular selling used car brand in the Belarus used car market.
 
 
-
+## Top 10 selling Car Brand
+- We first try to find out top 10 selling used car brand in the Catalog
 ```{r top10, echo=FALSE}
 
 top<-sort(table(car_data$manufacturer_name),decreasing = T)[1:10]
@@ -228,7 +295,11 @@ plot_ly(data = pie_data, labels = ~Brand, values=~Freq,type="pie")%>%
 
 
 ```
+The top 10 brand cars is almost have one-third of share in the catalog. The most popular vehicle manufacturer is Volkswagen, which accounts for 11% of the whole used car market and is the only automobile manufacturer with a proportion of more than 10%
 
+
+## Car body color overview
+- It is also interesting to exaime the color of the used car in the catalogs.
 ```{r bodycolor, echo=FALSE}
 pie_data_color<- as.data.frame(table(car_data_other$color))
 colnames(pie_data_color)<-c("Color","Freq")
@@ -236,7 +307,12 @@ colnames(pie_data_color)<-c("Color","Freq")
 plot_ly(data = pie_data_color, labels = ~Color, values=~Freq,type="pie")%>%
   layout(title = "Body color")
 ```
+The most popular vehicle body color is Black, which accounts for 20% of the total vehicles, the second is Silver, accounting for 17.8%. Statistics show that the least color is orange, only 0.478%. But, since the many special colors cannot be included in the calculation, we classify them as ‘others’. Therefore,the least color definitely not be Orange in the used car market;
 
+
+
+## Car body type overview
+- Next, we try to find out which body type is most popular in the catalog.
 ```{r bodytype, echo=FALSE}
 pie_data_type<- as.data.frame(table(car_data_other$body_type))
 colnames(pie_data_type)<-c("Type","Freq")
@@ -244,6 +320,11 @@ colnames(pie_data_type)<-c("Type","Freq")
 plot_ly(data = pie_data_type, labels = ~Type, values=~Freq,type="pie")%>%
   layout(title = "Body type")
 ```
+The most popular vehicle body type is Sedan[1^], which accounts for 33.8% of the total vehicles. It accounts for one third of the used car market and almost twice as much as the second type.
+
+
+
+## Investigation of Vehicle features over the years
 
 ```{r year_trends, echo=FALSE}
 
@@ -270,7 +351,22 @@ ggplotly(p_t_3)
 
 
 ```
+- Observations
+Since 1984, Automatic transmission vehicles have appeared in the used car market, and with the development of time,Automatic transmission vehicles have gradually overtaken Mechanical transmission vehicles. In 2006, the number of Automatic transmission vehicles surpassed that of Mechanical transmission vehicles for the first time in the used car market, and has been maintained since then.
 
+In the used car market, gasoline vehicles and diesel vehicles are the most, but not only these two models. Gas vehicles always had a certain market volume, and hybrid-petrol vehicles had joined in 2005.
+
+Warranty won’t be an important factor for car buyers, because lots of used cars with higher production years and high mileage. Since it’s  too common in the used car market and almost most vehicles have no warranty. Thus, the Warranty becomes an negligible reference value.
+
+
+
+
+
+
+
+
+
+## Which car model is the most popular in "Volkswagen"?
 
 ```{r q2, echo=FALSE}
 
@@ -288,14 +384,15 @@ V_car_top5<- V_car_top5[1:5,]
 V_car_top5 <- rbind(V_car_top5, other)
 
 plot_ly(data = V_car_top5, labels = ~Model, values=~Freq,type="pie")%>%
-  layout(title = "TOP5 most popular of Volkswagen")
+  layout(title = "TOP5 most popular model of Volkswagen")
 
 ```
+According to the previous exploration about Top 10 brands, we know that Volkswagen is the most popular manufacturer. We searched the Top 5 Volkswagen models based on this condition, and concluded that Passat is the most popular car model in Volkswagen by the pie chart above. In order to have further understanding of the Volkswagen, it is necessary to explore the top 5 car model in Volkswagen. Therefore, we will continue analyze the top 5 car model.
 
 
 
-
-```{r top5Vcar_model, echo=FALSE}
+- The Price of most popular 5 model in "Volkswagen"
+```{r top5Vcar_model_plot1, echo=FALSE}
 
 Top_5_v_dataset <- V_car%>%filter(model_name %in% V_car_top5_names )
 Top_5_v_dataset$model_name <- as.character(Top_5_v_dataset$model_name)
@@ -306,16 +403,20 @@ Top_5_v_dataset <- as.data.frame(Top_5_v_dataset)
 #
 plot_ly(Top_5_v_dataset, y = ~model_name, x = ~price_usd) %>%
   add_boxplot(color = ~model_name)
+```
+Considering that the price of the vehicle cannot be fixed at one numerical value,therefore we use boxplots to visualize the price distributions. Surprisingly, the most selling used car model of "Volkswagen" in the catalog is not the cheapest; its price is in the middle of the other top 5 car models.
 
-
-
-#
+```{r top5Vcar_model_plot2, echo=FALSE}
 plot_22 <- ggplot(Top_5_v_dataset,aes( x= odometer_value)) + geom_histogram(aes(fill = model_name)) + facet_grid(model_name~.)
 ggplotly(plot_22)
 
 
 
+```
 
+
+
+```{r top5Vcar_model_plot3, echo=FALSE}
 #top 5 car trend over time
 #year trend from 1980
 Top_5_by_year <- Top_5_v_dataset%>%filter(year_produced >=1980)%>%group_by(model_name,year_produced)%>%count()
@@ -348,3 +449,9 @@ bubble_2 <- Top_5_v_dataset %>% arrange(desc(model_name)) %>% ggplot(aes(x=model
 ggplotly(bubble_2)
 
 ```
+
+
+
+
+
+[1^]: A sedan is a 4-door passenger car with a separate trunk built on a three-box body

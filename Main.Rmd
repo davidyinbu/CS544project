@@ -42,7 +42,8 @@ This Dataset is retrieved from Kaggle, and the following data is collected from 
 
 # Goal of Analysis
 
-Nowadays, the Used Car Market has been so well developed, and the highly cost-effective used car makes many people will put the used cars as the first choice when they are planning to have a car. As the obeservation we found that People would like to spend a lot of time for discussing prices of heavily used cars, how they age and hold or lose value. And if someone is planning to buy a used car, they have to spend some time finding similar cars in the catalog and trying to discover trends and figure out the fair price. More importantly, they have to withstand the stress of decision making regarding the price. Thus,  the concept of this research is to collect the data and try to build a model that effectively predicts the sales volume of the car based on its parameters (both numerical and categorical), while using the most effective tools available and exploring the decision making of the model thoroughly.
+Nowadays, the Used Car Market has been so well developed, and the highly cost-effective used car makes many people will put the used cars as the first choice when they are planning to have a car. As the obeservation we found that People would like to spend a lot of time for discussing prices of heavily used cars, how they age and hold or lose value. And if someone is planning to buy a used car, they have to spend some time finding similar cars in the catalog and trying to discover trends and figure out the fair price. More importantly, they have to withstand the stress of decision making regarding the price. Thus, the concept of this research is to collect the data and try to find out the relationship between different attributes of the car based on its parameters (both numerical and categorical), while using the most effective tools available to explore thoroughly.
+
 
 
 

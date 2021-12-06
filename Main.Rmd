@@ -467,7 +467,7 @@ The bubble chart below has presented the exchangeability of all used cars in the
 
 ```{r bubble2, echo=FALSE}
 
-bubble_2 <- Top_5_v_dataset %>% arrange(desc(model_name)) %>% ggplot(aes(x=model_name, y=price_usd,  color = is_exchangeable, size = 0.5)) + geom_jitter(alpha=0.1)
+bubble_2 <- Top_5_v_dataset %>% arrange(desc(model_name)) %>% ggplot(aes(x=model_name, y=price_usd,  color = is_exchangeable)) + geom_jitter(alpha=0.5, size = 0.8) + scale_color_manual(values = c("green", "red"))
 
 ggplotly(bubble_2)
 

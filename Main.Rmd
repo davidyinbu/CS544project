@@ -159,10 +159,10 @@ colnames(s40)<- "size40"
 
 ss <- data.frame(s10 = s10, s20 = s20, s30=s30,s40=s40)
 
-mean(ss[,1])
-mean(ss[,2])
-mean(ss[,3])
-mean(ss[,4])
+#mean(ss[,1])
+#mean(ss[,2])
+#mean(ss[,3])
+#mean(ss[,4])
 
 
 sss <- gather(ss)
@@ -300,7 +300,7 @@ plot_ly(data = pie_data, labels = ~Brand, values=~Freq,type="pie")%>%
 The top 10 brand cars is almost have one-third of share in the catalog. The most popular vehicle manufacturer is Volkswagen, which accounts for 11% of the whole used car market and is the only automobile manufacturer with a proportion of more than 10%
 
 
-## Car body color overview
+## Veichle's body color overview
 - It is also interesting to exaime the color of the used car in the catalogs.
 ```{r bodycolor, echo=FALSE}
 pie_data_color<- as.data.frame(table(car_data_other$color))
@@ -313,7 +313,7 @@ The most popular vehicle body color is Black, which accounts for 20% of the tota
 
 
 
-## Car body type overview
+## Veichle's body type overview
 - Next, we try to find out which body type is most popular in the catalog.
 ```{r bodytype, echo=FALSE}
 pie_data_type<- as.data.frame(table(car_data_other$body_type))

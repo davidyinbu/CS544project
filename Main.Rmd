@@ -367,7 +367,7 @@ ggplotly(p_t_3)
 
 
 
-## Which car model is the most popular in "Volkswagen"?
+# Which car model is the most popular in "Volkswagen"?
 
 ```{r q2, echo=FALSE}
 
@@ -393,11 +393,11 @@ plot_ly(data = V_car_top5, labels = ~Model, values=~Freq,type="pie",
   layout(title = "TOP5 most popular model of Volkswagen")
 
 ```
-According to the previous exploration about Top 10 brands, we know that Volkswagen is the most popular manufacturer. We searched the Top 5 Volkswagen models based on this condition, and concluded that Passat is the most popular car model in Volkswagen by the pie chart above. In order to have further understanding of the Volkswagen, it is necessary to explore the top 5 car model in Volkswagen. Therefore, we will continue analyze the top 5 car model.
+- According to the previous exploration about Top 10 brands, we know that Volkswagen is the most popular manufacturer. We searched the Top 5 Volkswagen models based on this condition, and concluded that Passat is the most popular car model in Volkswagen by the pie chart above. In order to have further understanding of the Volkswagen, it is necessary to explore the top 5 car model in Volkswagen. Therefore, we will continue analyze the top 5 car model.
 
 
 
-- The Price of most popular 5 model in "Volkswagen"
+## The Price of most popular 5 model in "Volkswagen"
 ```{r top5Vcar_model_plot1, echo=FALSE}
 
 Top_5_v_dataset <- V_car%>%filter(model_name %in% V_car_top5_names )
@@ -410,10 +410,10 @@ Top_5_v_dataset <- as.data.frame(Top_5_v_dataset)
 colors_2 <- c("orange", "yellow", "red", "green", "blue")
 plot_ly(Top_5_v_dataset, y = ~model_name, x = ~price_usd, type = "box", color = ~model_name, colors = colors_2) %>%layout(boxmode = "group")
 ```
-Considering that the price of the vehicle cannot be fixed at one numerical value,therefore we use boxplots to visualize the price distributions. Surprisingly, the most selling used car model of "Volkswagen" in the catalog is not the cheapest; its price is in the middle of the other top 5 car models. However, the Touran has the highest median price, and the Golf has the lowest.
+- Considering that the price of the vehicle cannot be fixed at one numerical value,therefore we use boxplots to visualize the price distributions. Surprisingly, the most selling used car model of "Volkswagen" in the catalog is not the cheapest; its price is in the middle of the other top 5 car models. However, the Touran has the highest median price, and the Golf has the lowest.
 
 
-- The Odometer of most popular 5 vehicles in Volkswagen
+## The Odometer of most popular 5 vehicles in Volkswagen
 ```{r top5Vcar_model_plot2, echo=FALSE}
 
 
@@ -427,7 +427,7 @@ ggplotly(plot_22)
 ```
 
 
-
+## Top 5 most popular vehicles in Volkswagen vs Produced Year
 ```{r top5Vcar_model_plot3, echo=FALSE}
 #top 5 car trend over time
 #year trend from 1980
@@ -436,27 +436,30 @@ Top_5_by_year <-  pivot_wider(Top_5_by_year, names_from = model_name,values_from
 
 Top_5_by_year[is.na(Top_5_by_year)] <- 0
 plot_23 <- Top_5_by_year %>%
-    gather(key,number, Golf, Jetta,Passat,T4,Touran) %>%
-    ggplot(aes(x=year_produced, y=number, colour=key)) +
-    geom_point() + geom_line() 
+    gather(Model,number, Golf, Jetta,Passat,T4,Touran) %>%
+    ggplot(aes(x=year_produced, y=number, colour=Model)) +
+    geom_point() + geom_line()+ scale_color_manual(values= colors_2)
 ggplotly(plot_23)
 
 ```
+- In this chart we can clearly observe the trend of the numbers of the models of Volkswagen sold as used produced cars during the period between 1980s and 2010s. The market of used Volkswagen vehicles experienced numerous shocks and growth throughout time. For the growth of the used vehicle market, there are multiple possible ways to explain the increasing number of the cars sold at a specific period. To begin with, an increase in selling of a specific model represents that this model could experience a total upgrade, a recently substantiated safety breach, an increase of price on the used car market, or the strong competitor releasing a more powerful model…etc. As the chart shows, the peak period of selling used Passat is around 2005, based on the statistics on the internet, Passat 2003-2004 was honored as one of the most valued models Volkswagen, therefore there will be more of these used models on sale. On the other hand, a decrease in selling a model represents that model may have opposite explanations. For example, Jetta 2015 was described by customers as the worst car ever owned because of the AC problem and transmission defects. Also, the Volkswagen emission scandal had also impacted the sales of used vehicles as well.
 
 
-```{r bubble, echo=FALSE}
+## Top 5 most popular vehicles in Volkswagen vs year produced/odometer-value
+```{r bubble1, echo=FALSE}
 
 names(V_car_top5) <- c("model_name", "Freq")
 Top_5_v_dataset <- merge(Top_5_v_dataset,V_car_top5, by  = "model_name")
-bubble_1 <- Top_5_v_dataset %>% arrange(desc(model_name)) %>% ggplot(aes(x=year_produced, y=odometer_value, size = price_usd, color = model_name)) + geom_point(alpha=0.25) 
+bubble_1 <- Top_5_v_dataset %>% arrange(desc(model_name)) %>% ggplot(aes(x=year_produced, y=odometer_value, size = price_usd, color = model_name)) + geom_point(alpha=0.25) + scale_color_manual(values = colors_2)
 ggplotly(bubble_1)
 
+```
+- In order to intuitively observe the relevance of these groups of data, we made a bubble chart to display the information carried by each sample. The colors represent the name of the vehicle model, the size of the bubble represents the price of vehicles, the horizontal axis represents the produced year of vehicles and it increases from left to right, the vertical axis represents the odometer values of vehicles.
+- From the graph, we can learn that the year produced of car is negatively correlated to odometer value, and price is positively correlated year produced, on the contrary negatively correlated to odometer value.
 
+```{r bubble2, echo=FALSE}
 
-
-
-
-bubble_2 <- Top_5_v_dataset %>% arrange(desc(model_name)) %>% ggplot(aes(x=model_name, y=price_usd,  color = is_exchangeable, size = 0.5)) + geom_jitter(alpha=0.25)
+bubble_2 <- Top_5_v_dataset %>% arrange(desc(model_name)) %>% ggplot(aes(x=model_name, y=price_usd,  color = is_exchangeable, size = 0.5)) + geom_jitter(alpha=0.1)
 
 ggplotly(bubble_2)
 
